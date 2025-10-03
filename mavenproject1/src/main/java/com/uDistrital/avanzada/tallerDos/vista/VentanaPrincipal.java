@@ -1,0 +1,158 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.uDistrital.avanzada.tallerDos.vista;
+
+import com.uDistrital.avanzada.tallerDos.modelo.Equipo;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.GridLayout;
+import java.io.File;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+/**
+ *
+ * @author santi
+ */
+public class VentanaPrincipal extends JFrame {
+
+    public final JButton btnCargarProps = new JButton("Cargar Equipos (.properties)");
+    public final JButton btnIniciar = new JButton("Iniciar Partida");
+    public final JButton btnLanzar = new JButton("Lanzar Argolla");
+    public final JButton btnOtraRonda = new JButton("Jugar otra ronda");
+    public final JButton btnHistorial = new JButton("Ver Historial");
+    public final JButton btnSalir = new JButton("Salir");
+
+    public final JComboBox<String> cbEquipoA = new JComboBox<>();
+    public final JComboBox<String> cbEquipoB = new JComboBox<>();
+    public final JTextArea consola = new JTextArea(12, 46);
+
+    private final CardLayout cards = new CardLayout();
+    private final JPanel root = new JPanel(cards);
+    private final JPanel pnlConfig = new JPanel();
+    private final JPanel pnlJuego = new JPanel();
+
+    public VentanaPrincipal() {
+        super("Argolla Llanera – Taller 2");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        consola.setEditable(false);
+
+        // Config
+        pnlConfig.setLayout(new GridLayout(0, 1, 8, 8));
+        pnlConfig.add(btnCargarProps);
+        pnlConfig.add(new JLabel("Equipo A:"));
+        pnlConfig.add(cbEquipoA);
+        pnlConfig.add(new JLabel("Equipo B:"));
+        pnlConfig.add(cbEquipoB);
+        pnlConfig.add(btnIniciar);
+
+        // Juego
+        pnlJuego.setLayout(new BorderLayout());
+        JPanel top = new JPanel();
+        top.add(btnLanzar);
+        top.add(btnOtraRonda);
+        top.add(btnHistorial);
+        top.add(btnSalir);
+        pnlJuego.add(top, BorderLayout.NORTH);
+        pnlJuego.add(new JScrollPane(consola), BorderLayout.CENTER);
+
+        root.add(pnlConfig, "CFG");
+        root.add(pnlJuego, "GAME");
+        setContentPane(root);
+        cards.show(root, "CFG");
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    // Navegación
+    public void showConfig() {
+        cards.show(root, "CFG");
+    }
+
+    public void showJuego() {
+        cards.show(root, "GAME");
+    }
+
+    // Utilidades UI
+    public void append(String texto) {
+        consola.append(texto);
+    }
+
+    public void setEquipos(List<Equipo> equipos) {
+        cbEquipoA.removeAllItems();
+        cbEquipoB.removeAllItems();
+        for (Equipo e : equipos) {
+            cbEquipoA.addItem(e.getNombre());
+            cbEquipoB.addItem(e.getNombre());
+        }
+    }
+
+    public File seleccionarProperties() {
+        JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("Seleccione archivo .properties");
+        int r = fc.showOpenDialog(this);
+        return r == JFileChooser.APPROVE_OPTION ? fc.getSelectedFile() : null;
+    }
+
+    public void mostrarDialogo(String titulo, String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Presenta un lanzamiento a partir de datos primitivos (sin DTOs de
+     * control).
+     */
+    public void mostrarLanzamiento(String equipoNombre,
+            String jugadorNombre,
+            String jugada,
+            int puntosLanzamiento,
+            int totalA,
+            int totalB,
+            boolean muerteSubita,
+            boolean finPartida,
+            String ganadorEquipoNombre,
+            List<String> ganadorJugadores) {
+        // 1) Popup paso-a-paso
+        mostrarDialogo("Lanzamiento", jugadorNombre + " : " + (jugada == null ? "" : jugada));
+
+        // 2) Consola
+        append(String.format("[%s] %s obtuvo %d (%s). Totales A=%d, B=%d%n",
+                equipoNombre, jugadorNombre, puntosLanzamiento, jugada, totalA, totalB));
+        if (muerteSubita) {
+            append("** Muerte súbita **\n");
+        }
+
+        // 3) Resultado final
+        if (finPartida && ganadorEquipoNombre != null) {
+            StringBuilder sb = new StringBuilder("Ganó ").append(ganadorEquipoNombre).append("\n");
+            for (String nom : ganadorJugadores) {
+                sb.append("- ").append(nom).append("\n");
+            }
+            mostrarDialogo("Resultado", sb.toString());
+        }
+    }
+
+    public void mostrarHistorial(List<com.uDistrital.avanzada.tallerDos.modelo.ArchivoAccesoAleatorio.Registro> registros) {
+        append("\n=== HISTORIAL ===\n");
+        for (var r : registros) {
+            append(r.toString());
+            append("\n");
+        }
+    }
+
+    public void cerrarAplicacion() {
+        dispose();
+        System.exit(0);
+    }
+}
