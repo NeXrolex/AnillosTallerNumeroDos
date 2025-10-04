@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 
 /**
+ * Controlador de vitsa que maneja la logica de presentacion
  *
  * @author Alex
  */
@@ -23,6 +24,12 @@ public class ControlVista implements ActionListener {
     private final VentanaPrincipal vista;
     private final ControlGeneral controlGeneral;
 
+    /**
+     * Constructor que recibe la inyeccion de controlGeneral e inicializa la
+     * ventana. Configura los ebventos de los botones
+     *
+     * @param general Inyeccion del controlGeneral
+     */
     public ControlVista(ControlGeneral general) {
         this.controlGeneral = general;
         this.vista = new VentanaPrincipal();
@@ -85,37 +92,53 @@ public class ControlVista implements ActionListener {
         String equipoNombre = (r.equipo != null ? r.equipo.getNombre() : "Equipo");
         String jugadorNombre = (r.jugador != null ? r.jugador.getNombre() : "Jugador");
         String jugada = (r.jugada != null ? r.jugada : "");
+        
+        // CAMBIO: En lugar de vista.mostrarLanzamiento(...) 
+        // Ahora la lógica está aquí en el controlador:
+        
+        // 1) Popup paso-a-paso
+        vista.mostrarDialogo("Lanzamiento", jugadorNombre + " : " + jugada);
 
-        String ganadorEquipo = null;
-        List<String> ganadorJugadores = new ArrayList<>();
+        // 2) Consola
+        vista.append(String.format("[%s] %s obtuvo %d (%s). Totales A=%d, B=%d%n",
+                equipoNombre, jugadorNombre, r.puntosLanzamiento, jugada, r.totalA, r.totalB));
+        if (r.muerteSubita) {
+            vista.append("** Muerte súbita **\n");
+        }
+
+        // 3) Resultado final
         if (r.finPartida && r.ganador != null) {
-            ganadorEquipo = r.ganador.getNombre();
+            String ganadorEquipo = r.ganador.getNombre();
+            List<String> ganadorJugadores = new ArrayList<>();
             for (Jugador j : r.ganador.getJugadores()) {
                 ganadorJugadores.add(j.getNombre());
             }
+            
+            StringBuilder sb = new StringBuilder("Ganó ").append(ganadorEquipo).append("\n");
+            for (String nom : ganadorJugadores) {
+                sb.append("- ").append(nom).append("\n");
+            }
+            vista.mostrarDialogo("Resultado", sb.toString());
         }
-
-        vista.mostrarLanzamiento(
-                equipoNombre,
-                jugadorNombre,
-                jugada,
-                r.puntosLanzamiento,
-                r.totalA,
-                r.totalB,
-                r.muerteSubita,
-                r.finPartida,
-                ganadorEquipo,
-                ganadorJugadores
-        );
     }
 
     private void onOtraRonda() {
         vista.append(controlGeneral.nuevaRonda());
     }
 
+    /**
+     * CAMBIO: Se movió la lógica de formateo desde VentanaPrincipal a aquí.
+     */
     private void onVerHistorial() {
         List<ArchivoAccesoAleatorio.Registro> registros = controlGeneral.obtenerHistorial();
-        vista.mostrarHistorial(registros);
+        
+        // CAMBIO: En lugar de vista.mostrarHistorial(registros)
+        // Ahora la lógica está aquí:
+        vista.append("\n=== HISTORIAL ===\n");
+        for (var r : registros) {
+            vista.append(r.toString());
+            vista.append("\n");
+        }
     }
 
     private void onSalir() {
@@ -124,7 +147,15 @@ public class ControlVista implements ActionListener {
         vista.cerrarAplicacion();
     }
 
-    public void actualizarEquiposEnVista(List<com.uDistrital.avanzada.tallerDos.modelo.Equipo> equipos) {
+    public void actualizarEquiposEnVista(List equipos) {
         vista.setEquipos(equipos);
     }
+
+    public void mostrar() {
+        SwingUtilities.invokeLater(() -> {
+            vista.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+            vista.setVisible(true);
+        });
+    }
+
 }
