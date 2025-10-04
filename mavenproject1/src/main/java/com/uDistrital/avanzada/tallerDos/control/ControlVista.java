@@ -50,6 +50,8 @@ public class ControlVista implements ActionListener {
             onVerHistorial();
         } else if (src == vista.btnSalir) {
             onSalir();
+        } else if (src == vista.btnVolver) {
+            onVolver();
         }
     }
 
@@ -126,5 +128,9 @@ public class ControlVista implements ActionListener {
 
     public void actualizarEquiposEnVista(List<com.uDistrital.avanzada.tallerDos.modelo.Equipo> equipos) {
         vista.setEquipos(equipos);
+    }
+
+    private void onVolver() {
+       vista.showJuego();
     }
 }

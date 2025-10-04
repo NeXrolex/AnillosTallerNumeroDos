@@ -32,6 +32,7 @@ public class VentanaPrincipal extends JFrame {
     public final JButton btnOtraRonda = new JButton("Jugar otra ronda");
     public final JButton btnHistorial = new JButton("Ver Historial");
     public final JButton btnSalir = new JButton("Salir");
+    public final JButton btnVolver = new JButton("Volver");
 
     public final JComboBox<String> cbEquipoA = new JComboBox<>();
     public final JComboBox<String> cbEquipoB = new JComboBox<>();
@@ -55,6 +56,7 @@ public class VentanaPrincipal extends JFrame {
         pnlConfig.add(new JLabel("Equipo B:"));
         pnlConfig.add(cbEquipoB);
         pnlConfig.add(btnIniciar);
+        pnlConfig.add(btnSalir);
 
         // Juego
         pnlJuego.setLayout(new BorderLayout());
@@ -62,7 +64,7 @@ public class VentanaPrincipal extends JFrame {
         top.add(btnLanzar);
         top.add(btnOtraRonda);
         top.add(btnHistorial);
-        top.add(btnSalir);
+        top.add(btnVolver);
         pnlJuego.add(top, BorderLayout.NORTH);
         pnlJuego.add(new JScrollPane(consola), BorderLayout.CENTER);
 
@@ -155,4 +157,5 @@ public class VentanaPrincipal extends JFrame {
         dispose();
         System.exit(0);
     }
+    
 }
