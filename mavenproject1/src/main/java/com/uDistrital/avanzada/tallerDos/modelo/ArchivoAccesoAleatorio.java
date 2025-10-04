@@ -19,13 +19,32 @@ import java.util.List;
  */
 public class ArchivoAccesoAleatorio implements Closeable {
 
+    // Archivo de acceso biinario de acceso aleatorio
     private final RandomAccessFile raf;
+    // Tamaño fijo de la clave en bites
     private static final int KEY = 8, STR = 32, RES = 1;
 
+    /**
+     * Constructor que abre o crea el archivo para la lectura y escritura
+     *
+     * @param f Archivo que recibe de acceso aleatorio
+     * @throws FileNotFoundException Si no se logra abrir el archivo
+     */
     public ArchivoAccesoAleatorio(File f) throws FileNotFoundException {
         this.raf = new RandomAccessFile(f, "rw");
     }
 
+    /**
+     *
+     * @param clave Clave para identificacion de la cadena
+     * @param equipo Nombre del equipo
+     * @param j1 Nombre Jugador 1
+     * @param j2 Nombre Jugador 2
+     * @param j3 Nombre Jugador 3
+     * @param j4 Nombre Jugador 4
+     * @param gano Resultado boleano que indica si gano
+     * @throws IOException Si ocurre un error de escritura
+     */
     public synchronized void anexar(String clave, String equipo,
             String j1, String j2, String j3, String j4,
             boolean gano) throws IOException {
@@ -39,6 +58,13 @@ public class ArchivoAccesoAleatorio implements Closeable {
         raf.writeBoolean(gano);
     }
 
+    /**
+     * Se encarga de leer los archivos de accesos aleatorio y devolverlos como
+     * una lista de registro
+     *
+     * @return Retorna la lista de registros almacenados
+     * @throws IOException Si ocurre un error Durante la lectura
+     */
     public synchronized List<Registro> leerTodos() throws IOException {
         List<Registro> out = new ArrayList<>();
         long recSize = KEY + STR + STR * 4L + RES; // 8 + 32 + 128 + 1 = 169
@@ -57,6 +83,13 @@ public class ArchivoAccesoAleatorio implements Closeable {
         return out;
     }
 
+    /**
+     * Escibe una cadena de lomgitud fija en el archivo
+     *
+     * @param s Cadena a escribir
+     * @param size Longitud fija en bites
+     * @throws IOException Si Ocurre un error de escritura
+     */
     private void writeFixed(String s, int size) throws IOException {
         byte[] d = s == null ? new byte[0] : s.getBytes(StandardCharsets.UTF_8);
         if (d.length > size) {
@@ -67,6 +100,13 @@ public class ArchivoAccesoAleatorio implements Closeable {
         }
     }
 
+    /**
+     * Lee una cadena de caracteres de longitud fija desde el archivo
+     *
+     * @param size Longitud fija a leer
+     * @return Cadena leida
+     * @throws IOException Si ocurre un error de lectura
+     */
     private String readFixed(int size) throws IOException {
         byte[] buf = new byte[size];
         raf.readFully(buf);
@@ -77,6 +117,11 @@ public class ArchivoAccesoAleatorio implements Closeable {
         return new String(buf, 0, end, StandardCharsets.UTF_8);
     }
 
+    /**
+     * Cierra el archivo
+     *
+     * @throws IOException si ocurre un error al cerrar el archivo
+     */
     @Override
     public void close() throws IOException {
         raf.close();
@@ -87,10 +132,27 @@ public class ArchivoAccesoAleatorio implements Closeable {
      */
     public static class Registro {
 
+        /**
+         * Clave identificadora, nombre del equipo y de los jugadores
+         */
         public final String clave, equipo, j1, j2, j3, j4;
+        /**
+         * Resultado del juego
+         */
         public final boolean gano;
 
-        public Registro(String clave, String equipo, String j1, String j2, String j3, String j4, boolean gano) {
+        /**
+         *
+         * @param clave Clave para identificacion de la cadena
+         * @param equipo Nombre del equipo
+         * @param j1 Nombre Jugador 1
+         * @param j2 Nombre Jugador 2
+         * @param j3 Nombre Jugador 3
+         * @param j4 Nombre Jugador 4
+         * @param gano Resultado boleano que indica si gano
+         */
+        public Registro(String clave, String equipo, String j1, String j2,
+                String j3, String j4, boolean gano) {
             this.clave = clave;
             this.equipo = equipo;
             this.j1 = j1;
@@ -99,6 +161,12 @@ public class ArchivoAccesoAleatorio implements Closeable {
             this.j4 = j4;
             this.gano = gano;
         }
+
+        /**
+         * Regrea una representacion legible del equipo
+         *
+         * @return Cadena con el resumen del registro
+         */
 
         @Override
         public String toString() {
