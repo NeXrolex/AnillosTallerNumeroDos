@@ -22,11 +22,12 @@ import javax.swing.JTextArea;
 
 /**
  *
- * @author santi
+ * @author Alex, Jeison
  */
 public class VentanaPrincipal extends JFrame {
 
-    public final JButton btnCargarProps = new JButton("Cargar Equipos (.properties)");
+    public final JButton btnCargarProps = 
+            new JButton("Cargar Equipos (.properties)");
     public final JButton btnIniciar = new JButton("Iniciar Partida");
     public final JButton btnLanzar = new JButton("Lanzar Argolla");
     public final JButton btnOtraRonda = new JButton("Jugar otra ronda");
