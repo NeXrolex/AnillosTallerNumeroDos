@@ -40,6 +40,7 @@ public class ControlVista implements ActionListener {
         vista.btnOtraRonda.addActionListener(this);
         vista.btnHistorial.addActionListener(this);
         vista.btnSalir.addActionListener(this);
+        vista.btnVolver.addActionListener(this);
     }
 
     @Override
@@ -57,6 +58,8 @@ public class ControlVista implements ActionListener {
             onVerHistorial();
         } else if (src == vista.btnSalir) {
             onSalir();
+        } else if (src == vista.btnVolver) {
+            onVolver();
         }
     }
 
@@ -156,6 +159,10 @@ public class ControlVista implements ActionListener {
             vista.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
             vista.setVisible(true);
         });
+    }
+    
+    private void onVolver(){
+        vista.showConfig();
     }
 
 }
