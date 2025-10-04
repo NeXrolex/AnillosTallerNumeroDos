@@ -32,6 +32,7 @@ public class ControlVista implements ActionListener {
         vista.btnLanzar.addActionListener(this);
         vista.btnOtraRonda.addActionListener(this);
         vista.btnHistorial.addActionListener(this);
+        vista.btnVolver.addActionListener(this);
         vista.btnSalir.addActionListener(this);
     }
 
@@ -131,6 +132,6 @@ public class ControlVista implements ActionListener {
     }
 
     private void onVolver() {
-       vista.showJuego();
+       vista.showConfig();
     }
 }
