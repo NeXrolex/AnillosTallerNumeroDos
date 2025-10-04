@@ -14,8 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+
  * @author Alex
+ * @author Jeison
  */
 public class ArchivoAccesoAleatorio implements Closeable {
 

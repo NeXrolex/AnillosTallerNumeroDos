@@ -158,9 +158,7 @@ public class ControlJuego {
         }
     }
 
-    /**
-     * Mensaje informativo (la regla real se aplica en siguienteLanzamiento).
-     */
+    
     public String nuevaRonda() {
         if (juego == null || juego.getEquipoA() == null || juego.getEquipoB() == null) {
             return "Inicie la partida primero\n";
