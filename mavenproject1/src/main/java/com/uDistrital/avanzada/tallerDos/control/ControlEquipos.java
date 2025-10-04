@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Clase encargada de gestionar a los equipos
  * @author Alex
- * @author Jeison
+ * @author Jeison 
  */
 public class ControlEquipos {
     /**
