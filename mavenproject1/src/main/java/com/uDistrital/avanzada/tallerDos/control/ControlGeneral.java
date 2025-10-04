@@ -41,8 +41,10 @@ public class ControlGeneral {
     
     public String cargarEquiposDesdeProperties(java.io.File f) {
         try {
-            List<ArchivoProperties.EquipoRaw> crudos = cProps.cargarCrudo(f); // datos crudos del archivo
-            cEquipos.reemplazarDesdeCrudos(crudos);                           // crea y administra entidades
+            // datos crudos del archivo
+            List<ArchivoProperties.EquipoRaw> crudos = cProps.cargarCrudo(f); 
+            // crea y administra entidades
+            cEquipos.reemplazarDesdeCrudos(crudos);                           
             cVista.actualizarEquiposEnVista(cEquipos.listar());
             return "Equipos cargados: " + cEquipos.total() + "\n";
         } catch (Exception ex) {
@@ -67,7 +69,8 @@ public class ControlGeneral {
         var r = cJuego.siguienteLanzamiento();
         if (!r.hayError() && r.finPartida && r.ganador != null) {
             try {
-                cRaf.escribirRegistroRonda("RND%05d".formatted(r.ronda), r.ganador, true);
+                cRaf.escribirRegistroRonda("RND%05d"
+                        .formatted(r.ronda), r.ganador, true);
             } catch (Exception ignored) {
             }
         }
