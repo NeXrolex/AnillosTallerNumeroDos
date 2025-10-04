@@ -14,7 +14,7 @@ import java.util.Properties;
 
 /**
  *
- * @author santi
+ * @author Alex
  */
 public class ArchivoProperties {
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * 
  *
  * @author Alex
  */
@@ -24,7 +25,8 @@ public class ControlSerializacion {
     /**
      * Componente de persistencia que sabe leer/escribir el archivo.
      */
-    private final ArchivoSerializacion serial = new ArchivoSerializacion(archivoSerial);
+    private final ArchivoSerializacion serial = 
+            new ArchivoSerializacion(archivoSerial);
 
     /**
      * Guarda equipos en disco mediante serialización binaria.
