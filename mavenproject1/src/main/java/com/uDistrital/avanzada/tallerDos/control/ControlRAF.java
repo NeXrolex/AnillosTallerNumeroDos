@@ -24,7 +24,8 @@ public class ControlRAF {
    * @param ganador equipo ganador (se leerán nombres de los 4 jugadores)
    * @param gano    bandera de resultado (true = ganó)
    */
-  public void escribirRegistroRonda(String clave, Equipo ganador, boolean gano) throws Exception {
+  public void escribirRegistroRonda(String clave, Equipo ganador,
+          boolean gano) throws Exception {
     if (archivoRaf.getParentFile() != null) {
       archivoRaf.getParentFile().mkdirs();
     }
@@ -48,7 +49,8 @@ public class ControlRAF {
    * Lee todos los registros del historial (en orden de escritura).
    * @return lista inmutable de registros DTO del RAF
    */
-  public List<ArchivoAccesoAleatorio.Registro> leerHistorial() throws Exception {
+  public List<ArchivoAccesoAleatorio.Registro> leerHistorial() throws
+          Exception {
     if (!archivoRaf.exists()) {
       return List.of();
     }

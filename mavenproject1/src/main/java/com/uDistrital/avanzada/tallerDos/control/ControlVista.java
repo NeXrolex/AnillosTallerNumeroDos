@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
 /**
  * Controlador de vitsa que maneja la logica de presentacion
  *
- * @author Alex
+ * @author Alex, Jeison
  */
 public class ControlVista implements ActionListener {
 
@@ -34,6 +34,7 @@ public class ControlVista implements ActionListener {
         this.controlGeneral = general;
         this.vista = new VentanaPrincipal();
 
+        //Seperacion de clases, le damos acciones a los botones 
         vista.btnCargarProps.addActionListener(this);
         vista.btnIniciar.addActionListener(this);
         vista.btnLanzar.addActionListener(this);
@@ -43,6 +44,12 @@ public class ControlVista implements ActionListener {
         vista.btnVolver.addActionListener(this);
     }
 
+    /**
+     * Metodo que maneja la delegacion de eventos de click de botones
+     *
+     *
+     * @param e evento generado al hacer click en un boton
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
@@ -63,6 +70,11 @@ public class ControlVista implements ActionListener {
         }
     }
 
+    /**
+     * Ayuda a la comunicacion para que el JFileChooser se comunique con el
+     * modelo Si no hay archivo no cumple la accion
+     *
+     */
     private void onCargarProps() {
         File f = vista.seleccionarProperties(); // JFileChooser en la Vista
         if (f == null) {
@@ -72,6 +84,10 @@ public class ControlVista implements ActionListener {
         vista.append(msg);
     }
 
+    /**
+     * Inicia la partida tomando los equipos seleccionados en la vista
+     *
+     */
     private void onIniciar() {
         String a = (String) vista.cbEquipoA.getSelectedItem();
         String b = (String) vista.cbEquipoB.getSelectedItem();
@@ -83,7 +99,9 @@ public class ControlVista implements ActionListener {
     }
 
     /**
-     * Un lanzamiento por clic; la Vista muestra todo con JOptionPane y consola.
+     * Ejecuta un lanzamiento y presenta resultados y mensajes. Controla la
+     * presentacion de los lanzamientos paso a paso. Muestra el resultado final
+     * cuando la partioda termina.
      */
     private void onLanzarPaso() {
         var r = controlGeneral.siguienteLanzamiento();
@@ -92,32 +110,35 @@ public class ControlVista implements ActionListener {
             return;
         }
 
-        String equipoNombre = (r.equipo != null ? r.equipo.getNombre() : "Equipo");
-        String jugadorNombre = (r.jugador != null ? r.jugador.getNombre() : "Jugador");
+        //Preparar datos para mostrar paso a paso 
+        String equipoNombre = (r.equipo != null ? r.equipo
+                .getNombre() : "Equipo");
+        String jugadorNombre = (r.jugador != null ? r.jugador
+                .getNombre() : "Jugador");
         String jugada = (r.jugada != null ? r.jugada : "");
-        
-        // CAMBIO: En lugar de vista.mostrarLanzamiento(...) 
-        // Ahora la lógica está aquí en el controlador:
-        
-        // 1) Popup paso-a-paso
+
+        // Muestra el dialogo con la accion del jugador
         vista.mostrarDialogo("Lanzamiento", jugadorNombre + " : " + jugada);
 
-        // 2) Consola
-        vista.append(String.format("[%s] %s obtuvo %d (%s). Totales A=%d, B=%d%n",
-                equipoNombre, jugadorNombre, r.puntosLanzamiento, jugada, r.totalA, r.totalB));
+        //Info del partido en el momento
+        vista.append(String
+                .format("[%s] %s obtuvo %d (%s). Totales A=%d, B=%d%n",
+                        equipoNombre, jugadorNombre, r.puntosLanzamiento,
+                        jugada, r.totalA, r.totalB));
         if (r.muerteSubita) {
             vista.append("** Muerte súbita **\n");
         }
 
-        // 3) Resultado final
+        // Muestra el resultado final y el final de la carrera 
         if (r.finPartida && r.ganador != null) {
             String ganadorEquipo = r.ganador.getNombre();
             List<String> ganadorJugadores = new ArrayList<>();
             for (Jugador j : r.ganador.getJugadores()) {
                 ganadorJugadores.add(j.getNombre());
             }
-            
-            StringBuilder sb = new StringBuilder("Ganó ").append(ganadorEquipo).append("\n");
+
+            StringBuilder sb = new StringBuilder("Ganó ").
+                    append(ganadorEquipo).append("\n");
             for (String nom : ganadorJugadores) {
                 sb.append("- ").append(nom).append("\n");
             }
@@ -125,16 +146,22 @@ public class ControlVista implements ActionListener {
         }
     }
 
+    /**
+     * Inicia una nueva ronda y muestra el mensaje en pantalla
+     *
+     */
     private void onOtraRonda() {
         vista.append(controlGeneral.nuevaRonda());
     }
 
     /**
-     * CAMBIO: Se movió la lógica de formateo desde VentanaPrincipal a aquí.
+     * Re4cupera el historial de lanzamientos y muestra la informacion
+     *
      */
     private void onVerHistorial() {
-        List<ArchivoAccesoAleatorio.Registro> registros = controlGeneral.obtenerHistorial();
-        
+        List<ArchivoAccesoAleatorio.Registro> registros = controlGeneral.
+                obtenerHistorial();
+
         // CAMBIO: En lugar de vista.mostrarHistorial(registros)
         // Ahora la lógica está aquí:
         vista.append("\n=== HISTORIAL ===\n");
@@ -144,16 +171,29 @@ public class ControlVista implements ActionListener {
         }
     }
 
+    /**
+     * Guarda el estado actual, muestra el historial y cierra la aplicacion
+     */
     private void onSalir() {
         controlGeneral.guardarEstado();
         onVerHistorial();
         vista.cerrarAplicacion();
     }
 
+    /**
+     * Actualiza la lista de equipos mostrados en la interfaz grafica para la
+     * seleccion.
+     *
+     *
+     * @param equipos Lista de nombres de equipos disponibles
+     */
+
     public void actualizarEquiposEnVista(List equipos) {
         vista.setEquipos(equipos);
     }
-
+    /**
+     * Invoca la interfaz grafica
+     */
     public void mostrar() {
         SwingUtilities.invokeLater(() -> {
             vista.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
@@ -161,7 +201,10 @@ public class ControlVista implements ActionListener {
         });
     }
     
-    private void onVolver(){
+    /**
+     * Regresa a la pantalla de configuracion inicial
+     */
+    private void onVolver() {
         vista.showConfig();
     }
 
