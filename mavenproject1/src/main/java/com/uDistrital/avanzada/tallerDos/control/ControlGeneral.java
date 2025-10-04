@@ -38,10 +38,7 @@ public class ControlGeneral {
         }
     }
 
-    /**
-     * Vista -> General -> Properties (crudo) -> Equipos (crear entidades) ->
-     * Vista
-     */
+    
     public String cargarEquiposDesdeProperties(java.io.File f) {
         try {
             List<ArchivoProperties.EquipoRaw> crudos = cProps.cargarCrudo(f); // datos crudos del archivo
