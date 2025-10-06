@@ -21,6 +21,8 @@ public class ControlJuego {
      * Estado del partido (modelo puro).
      */
     private Juego juego;
+    private boolean finPartida;
+    private int contadorRondas = 1;
 
     /**
      * Inicia una partida con dos equipos (solo datos).
@@ -81,7 +83,7 @@ public class ControlJuego {
 
             boolean finMano = (juego.getIdxJugador() == 4);
             boolean cambioEquipo = finMano;
-            boolean finPartida = false;
+            this.finPartida = false;
             Equipo ganador = null;
 
             if (finMano) {
@@ -100,7 +102,7 @@ public class ControlJuego {
                             cambioEquipo = false; // seguimos en MS
                         } else {
                             // Hay ganador por superar la meta
-                            finPartida = true;
+                            this.finPartida = true;
                             ganador = (juego.getPuntosA() > juego.getPuntosB()) ? juego.getEquipoA() : juego.getEquipoB();
                         }
                     } else {
@@ -157,13 +159,27 @@ public class ControlJuego {
             }
         }
     }
-
     /**
      * Mensaje informativo (la regla real se aplica en siguienteLanzamiento).
      */
-    public String nuevaRonda() {
-        if (juego == null || juego.getEquipoA() == null || juego.getEquipoB() == null) {
-            return "Inicie la partida primero\n";
+    public String nuevaRonda() {       
+        if (finPartida == true) {
+            if (contadorRondas >= 2) {
+            return "Ya no puedes jugar más rondas, por favor cambia de equipos.";
+            }
+            contadorRondas++;
+            finPartida = false; // reinicia el estado del juego
+            if (juego != null) {
+                juego.setRondaActual(contadorRondas);
+                juego.setPuntosA(0);
+                juego.setPuntosB(0);
+                juego.setIdxJugador(0);
+                juego.setTurnoEquipoA(true);
+                juego.setEnMuerteSubita(false);
+            }
+            return "Partida nueva iniciada \n Ronda " + (contadorRondas) + " iniciada";
+
+            
         }
         // Mensaje más claro: la ronda avanza cuando B termina su mano
         return "Si ya jugaron A y B, la siguiente ronda se activará al finalizar la mano actual. Juega: "
@@ -279,5 +295,6 @@ public class ControlJuego {
         public boolean hayError() {
             return error != null;
         }
+        
     }
 }
