@@ -22,16 +22,18 @@ import javax.swing.JTextArea;
 
 /**
  *
- * @author santi
+ * @author Alex, Jeison
  */
 public class VentanaPrincipal extends JFrame {
 
-    public final JButton btnCargarProps = new JButton("Cargar Equipos (.properties)");
+    public final JButton btnCargarProps = 
+            new JButton("Cargar Equipos (.properties)");
     public final JButton btnIniciar = new JButton("Iniciar Partida");
     public final JButton btnLanzar = new JButton("Lanzar Argolla");
     public final JButton btnOtraRonda = new JButton("Jugar otra ronda");
     public final JButton btnHistorial = new JButton("Ver Historial");
     public final JButton btnSalir = new JButton("Salir");
+    public final JButton btnVolver = new JButton("Volver");
 
     public final JComboBox<String> cbEquipoA = new JComboBox<>();
     public final JComboBox<String> cbEquipoB = new JComboBox<>();
@@ -55,6 +57,7 @@ public class VentanaPrincipal extends JFrame {
         pnlConfig.add(new JLabel("Equipo B:"));
         pnlConfig.add(cbEquipoB);
         pnlConfig.add(btnIniciar);
+        pnlConfig.add(btnSalir);
 
         // Juego
         pnlJuego.setLayout(new BorderLayout());
@@ -62,7 +65,7 @@ public class VentanaPrincipal extends JFrame {
         top.add(btnLanzar);
         top.add(btnOtraRonda);
         top.add(btnHistorial);
-        top.add(btnSalir);
+        top.add(btnVolver);
         pnlJuego.add(top, BorderLayout.NORTH);
         pnlJuego.add(new JScrollPane(consola), BorderLayout.CENTER);
 
@@ -107,48 +110,6 @@ public class VentanaPrincipal extends JFrame {
 
     public void mostrarDialogo(String titulo, String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
-     * Presenta un lanzamiento a partir de datos primitivos (sin DTOs de
-     * control).
-     */
-    public void mostrarLanzamiento(String equipoNombre,
-            String jugadorNombre,
-            String jugada,
-            int puntosLanzamiento,
-            int totalA,
-            int totalB,
-            boolean muerteSubita,
-            boolean finPartida,
-            String ganadorEquipoNombre,
-            List<String> ganadorJugadores) {
-        // 1) Popup paso-a-paso
-        mostrarDialogo("Lanzamiento", jugadorNombre + " : " + (jugada == null ? "" : jugada));
-
-        // 2) Consola
-        append(String.format("[%s] %s obtuvo %d (%s). Totales A=%d, B=%d%n",
-                equipoNombre, jugadorNombre, puntosLanzamiento, jugada, totalA, totalB));
-        if (muerteSubita) {
-            append("** Muerte súbita **\n");
-        }
-
-        // 3) Resultado final
-        if (finPartida && ganadorEquipoNombre != null) {
-            StringBuilder sb = new StringBuilder("Ganó ").append(ganadorEquipoNombre).append("\n");
-            for (String nom : ganadorJugadores) {
-                sb.append("- ").append(nom).append("\n");
-            }
-            mostrarDialogo("Resultado", sb.toString());
-        }
-    }
-
-    public void mostrarHistorial(List<com.uDistrital.avanzada.tallerDos.modelo.ArchivoAccesoAleatorio.Registro> registros) {
-        append("\n=== HISTORIAL ===\n");
-        for (var r : registros) {
-            append(r.toString());
-            append("\n");
-        }
     }
 
     public void cerrarAplicacion() {
