@@ -45,6 +45,7 @@ class ControlJuegoTest {
     }
     /**
      * Verifica el inicio de una partida con equipos no validos
+     * 
      */
     @Test
     void testIniciarPartidaConEquiposInvalidos() {
