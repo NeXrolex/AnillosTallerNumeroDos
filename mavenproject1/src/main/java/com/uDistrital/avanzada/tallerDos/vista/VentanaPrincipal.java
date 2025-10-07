@@ -4,6 +4,7 @@
  */
 package com.uDistrital.avanzada.tallerDos.vista;
 
+import com.uDistrital.avanzada.tallerDos.modelo.ArchivoAccesoAleatorio;
 import com.uDistrital.avanzada.tallerDos.modelo.Equipo;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -26,8 +27,8 @@ import javax.swing.JTextArea;
  */
 public class VentanaPrincipal extends JFrame {
 
-    public final JButton btnCargarProps = 
-            new JButton("Cargar Equipos (.properties)");
+    public final JButton btnCargarProps
+            = new JButton("Cargar Equipos (.properties)");
     public final JButton btnIniciar = new JButton("Iniciar Partida");
     public final JButton btnLanzar = new JButton("Lanzar Argolla");
     public final JButton btnOtraRonda = new JButton("Jugar otra ronda");
@@ -112,8 +113,13 @@ public class VentanaPrincipal extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void cerrarAplicacion() {
+    public void cerrarAplicacion(List<ArchivoAccesoAleatorio.Registro> registros) {
         dispose();
+        System.out.println("++++++++++++++++++++");
+        System.out.println("");
+        System.out.println(registros);
+        System.out.println("");
+        System.out.println("++++++++++++++++++++");
         System.exit(0);
     }
 }
