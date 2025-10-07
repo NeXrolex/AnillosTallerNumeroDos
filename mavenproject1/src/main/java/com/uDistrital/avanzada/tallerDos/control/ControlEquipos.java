@@ -12,15 +12,19 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Clase encargada de gestionar a los equipos
  * @author Alex
+ * @author Jeison 
  */
 public class ControlEquipos {
-
+    /**
+     * Lista que almacena los equipos gestionados
+     */
     private final List<Equipo> equipos = new ArrayList<>();
 
     /**
-     * Reemplaza toda la lista con entidades ya construidas.
+     * Remplaza la lista interna de equipos con una nueva
+     * @param nuevos Nueva lista de uquipos para remplazar
      */
     public void reemplazarTodos(List<Equipo> nuevos) {
         equipos.clear();
@@ -30,7 +34,8 @@ public class ControlEquipos {
     }
 
     /**
-     * Construye entidades desde crudos y reemplaza la lista administrada.
+     * Construye y replaza la lista de equipos a paritir de datos importados 
+     * @param crudos Lista de objetos con los datos a convertir
      */
     public void reemplazarDesdeCrudos(List<ArchivoProperties.EquipoRaw> crudos) {
         equipos.clear();
@@ -45,11 +50,18 @@ public class ControlEquipos {
             equipos.add(e);
         }
     }
-
+    /**
+     * Regresa una lista indificable de los datos almacenados
+     * @return Lista inmodificalbe de los equipos
+     */
     public List<Equipo> listar() {
         return Collections.unmodifiableList(equipos);
     }
-
+    /**
+     * Busca los equipos por el nombre 
+     * @param nombre nombre del equipos a buscar 
+     * @return El equipo que coincide con el nombre o null si no se encuetra
+     */
     public Equipo buscarPorNombre(String nombre) {
         if (nombre == null) {
             return null;
@@ -61,7 +73,10 @@ public class ControlEquipos {
         }
         return null;
     }
-
+    /**
+     * Regresa el numero total de equipos almacenados
+     * @return Numero total de equipos almacenados
+     */
     public int total() {
         return equipos.size();
     }

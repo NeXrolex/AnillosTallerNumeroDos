@@ -47,9 +47,10 @@ public class ControlJuego {
     }
 
     /**
-     * Ejecuta UN lanzamiento (para animación lenta en la Vista).
-     *
-     * @return DTO con datos para mostrar (o error)
+     * Encargado de hacer un lanzamiento individual, tambien gestiona el flujo
+     * del juego turnos, cambios de equipo,finalización de manos, evaluación de
+     * ganadores y muerte súbita.
+     * @return Lanzamiento con todos los datos correspondientes o error si no es
      */
     public Lanzamiento siguienteLanzamiento() {
         if (juego == null || juego.getEquipoA() == null
@@ -213,7 +214,6 @@ public class ControlJuego {
     private List<Jugador> jugadores(Equipo e) {
         return e.getJugadores();
     }
-
     /**
      * Genera un puntaje aleatorio siguiendo los parametros del taller :)
      * jhoncito pedimos piedad 
@@ -272,7 +272,7 @@ public class ControlJuego {
      * sin exponer directamente el modelo interno.
      */
     public static class Lanzamiento {
-
+        
         public final Equipo equipo;
         public final Jugador jugador;
         public final int puntosLanzamiento;

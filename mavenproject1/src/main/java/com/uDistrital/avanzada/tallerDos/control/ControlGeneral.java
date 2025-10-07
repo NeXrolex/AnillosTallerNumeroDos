@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Esta clase se encarga de coordinar la comunicación entre los diferentes
- * módulos de control del programa: equipos, propiedades, serialización,
- * archivos de acceso aleatorio, juego y vista.
+ *  * Clase encargada de orquestar las funciones del sistema
  *
  * @author Alex
- * @author Santiago
+ * @author Jeison
  */
 public class ControlGeneral {
 
+    // Inyección: se pasa this para que cada controlador
+    // pueda llamar de regreso a ControlGeneral si lo necesita
     private final ControlEquipos cEquipos = new ControlEquipos();
     private final ControlProperties cProps = new ControlProperties();
     private final ControlSerializacion cSer = new ControlSerializacion();
@@ -31,6 +31,11 @@ public class ControlGeneral {
      * comienza vacía.
      */
 
+    /**
+     *
+     * Construtor encargado de instanciar objetos e inyectarse a las otras
+     * clases
+     */
     public ControlGeneral() {
         this.cVista = new ControlVista(this);
         try {
@@ -42,19 +47,18 @@ public class ControlGeneral {
         } catch (Exception ignored) {
         }
     }
-
     /**
-     * Carga equipos desde un archivo .properties.
-     * Vista -> General -> Properties (crudo) -> Equipos (crear entidades) ->
-     * Vista
+     * Carga equipos desde el archivo properties 
+     * @param f Archivo properties
+     * @return  Mensaje notificando de la carga del archivo
      */
-    
+
     public String cargarEquiposDesdeProperties(java.io.File f) {
         try {
             // datos crudos del archivo
-            List<ArchivoProperties.EquipoRaw> crudos = cProps.cargarCrudo(f); 
+            List<ArchivoProperties.EquipoRaw> crudos = cProps.cargarCrudo(f);
             // crea y administra entidades
-            cEquipos.reemplazarDesdeCrudos(crudos);                           
+            cEquipos.reemplazarDesdeCrudos(crudos);
             cVista.actualizarEquiposEnVista(cEquipos.listar());
             return "Equipos cargados: " + cEquipos.total() + "\n";
         } catch (Exception ex) {
@@ -63,14 +67,10 @@ public class ControlGeneral {
     }
 
     /**
-     * Inicia una partida entre dos equipos seleccionados.
-     *
-     * Flujo de datos:
-     * Vista -> ControlGeneral -> ControlEquipos -> ControlJuego
-     *
-     * @param nombreA nombre del equipo A
-     * @param nombreB nombre del equipo B
-     * @return mensaje indicando el inicio de la partida o error
+     * Inicia una nueva partida por los dos equipos seleccionados por nombre 
+     * @param nombreA Nombre del equipo A
+     * @param nombreB Nombre del equipo A
+     * @return Mensaje resultante del intento de iniciar la partida
      */
     public String iniciarPartida(String nombreA, String nombreB) {
         Equipo a = cEquipos.buscarPorNombre(nombreA);
@@ -79,13 +79,9 @@ public class ControlGeneral {
     }
 
     /**
-     * Ejecuta un lanzamiento en la partida actual.
-     *
-     * Flujo de datos:
-     * Vista -> ControlGeneral -> ControlJuego
-     * Si la partida termina, se guarda el resultado usando ControlRAF.
-     *
-     * @return objeto Lanzamiento con los datos del tiro
+     * Realiza el lanzamiento del siguiente juego
+     * En caso de finalizar la partida registra un ganador
+     * @return Resultado del siguiente lanzamiento
      */
     public ControlJuego.Lanzamiento siguienteLanzamiento() {
         var r = cJuego.siguienteLanzamiento();
@@ -99,19 +95,15 @@ public class ControlGeneral {
         return r;
     }
     /**
-     * Inicia una nueva ronda si la partida anterior ha finalizado.
-     *
-     * @return mensaje informativo sobre el estado de la nueva ronda
+     * Inicia una nueva ronda en la partida actual
+     * @return Mensaje de la nuea ronda iniciada
      */
     public String nuevaRonda() {
         return cJuego.nuevaRonda();
     }
 
     /**
-     * Guarda el estado actual de los equipos mediante serialización.
-     *
-     * Flujo de datos:
-     * Vista -> ControlGeneral -> ControlSerializacion
+     * Guarda el estado actual de los equipos
      */
     public void guardarEstado() {
         try {
@@ -121,14 +113,10 @@ public class ControlGeneral {
     }
 
     /**
-     * Obtiene el historial de partidas almacenado en archivos de acceso aleatorio.
-     *
-     * Flujo de datos:
-     * Vista -> ControlGeneral -> ControlRAF
-     *
-     * @return lista de registros del historial o lista vacía si ocurre un error
+     * Recupera el acceso de las partidas almacenadas en el archivo
+     * @return Lista de registro del historial
      */
-    public List<ArchivoAccesoAleatorio.Registro> obtenerHistorial() {
+public List<ArchivoAccesoAleatorio.Registro> obtenerHistorial() {
         try {
             return cRaf.leerHistorial();
         } catch (Exception e) {
