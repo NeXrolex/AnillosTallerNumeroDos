@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.uDistrital.avanzada.tallerDos.control;
 
 import com.uDistrital.avanzada.tallerDos.modelo.ArchivoAccesoAleatorio;
@@ -25,8 +22,14 @@ public class ControlGeneral {
     private final ControlSerializacion cSer = new ControlSerializacion();
     private final ControlRAF cRaf = new ControlRAF();
     private final ControlJuego cJuego = new ControlJuego();
-
     private final ControlVista cVista;
+    
+    /**
+     * Constructor de la clase.
+     * Inicializa la vista principal y carga los equipos previamente
+     * serializados (si existen). Si no hay registros, la lista de equipos
+     * comienza vacía.
+     */
 
     /**
      *
