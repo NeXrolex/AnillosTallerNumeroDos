@@ -37,7 +37,8 @@ public class ControlEquipos {
      * Construye y replaza la lista de equipos a paritir de datos importados 
      * @param crudos Lista de objetos con los datos a convertir
      */
-    public void reemplazarDesdeCrudos(List<ArchivoProperties.EquipoRaw> crudos) {
+    public void reemplazarDesdeCrudos(List<ArchivoProperties
+            .EquipoRaw> crudos) {
         equipos.clear();
         if (crudos == null) {
             return;
@@ -45,7 +46,8 @@ public class ControlEquipos {
         for (ArchivoProperties.EquipoRaw raw : crudos) {
             Equipo e = new Equipo(raw.getNombre());
             for (ArchivoProperties.JugadorRaw jr : raw.getJugadores()) {
-                e.getJugadores().add(new Jugador(jr.getNombre(), jr.getApodo()));
+                e.getJugadores().add(new Jugador(jr.getNombre(), jr
+                        .getApodo()));
             }
             equipos.add(e);
         }

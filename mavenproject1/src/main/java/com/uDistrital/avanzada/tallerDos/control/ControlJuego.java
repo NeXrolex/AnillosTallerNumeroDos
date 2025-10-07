@@ -300,7 +300,8 @@ public class ControlJuego {
          * @param ganador Equipo ganador (si lo hay).
          * @param muerteSubita Si el juego está en modo muerte súbita.
          * @param ronda Ronda actual del juego.
-         * @param meta Texto auxiliar (por ejemplo, indicadores de emparejamiento).
+         * @param meta Texto auxiliar (por ejemplo,
+         * indicadores de emparejamiento).
          */
         public Lanzamiento(Equipo eq, Jugador j, int pts,
                 String jugada, int totA, int totB,

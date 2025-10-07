@@ -131,13 +131,15 @@ public class VentanaPrincipal extends JFrame {
      * @param mensaje Contenido del mensaje
      */
     public void mostrarDialogo(String titulo, String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, titulo,
+                JOptionPane.INFORMATION_MESSAGE);
     }
     /**
      * Cierra la aplicacion y muestra los ganadores de la partida en consola
      * @param registros Registros del historial 
      */
-    public void cerrarAplicacion(List<ArchivoAccesoAleatorio.Registro> registros) {
+    public void cerrarAplicacion(List<ArchivoAccesoAleatorio
+            .Registro> registros) {
         dispose();
         System.out.println("++++++++++++++++++++");
         System.out.println("");

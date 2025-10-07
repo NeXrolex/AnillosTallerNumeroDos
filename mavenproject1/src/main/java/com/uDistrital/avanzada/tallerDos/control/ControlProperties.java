@@ -17,7 +17,8 @@ public class ControlProperties {
   private final ArchivoProperties archivoProps = new ArchivoProperties();
 
   /** Devuelve equipos crudos (EquipoRaw) leídos del archivo. */
-  public List<ArchivoProperties.EquipoRaw> cargarCrudo(File f) throws IOException {
+  public List<ArchivoProperties
+        .EquipoRaw> cargarCrudo(File f) throws IOException {
     return archivoProps.leer(f);
   }
 }
