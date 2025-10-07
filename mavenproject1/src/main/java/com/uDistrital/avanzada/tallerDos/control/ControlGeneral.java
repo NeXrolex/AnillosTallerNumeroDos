@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.uDistrital.avanzada.tallerDos.control;
 
 import com.uDistrital.avanzada.tallerDos.modelo.ArchivoAccesoAleatorio;
@@ -11,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Se responsabiliza de hacer las conexiones entre los controles y continuar la
- * comunicacion
+ * Esta clase se encarga de coordinar la comunicación entre los diferentes
+ * módulos de control del programa: equipos, propiedades, serialización,
+ * archivos de acceso aleatorio, juego y vista.
  *
  * @author Alex
+ * @author Santiago
  */
 public class ControlGeneral {
 
@@ -23,8 +22,14 @@ public class ControlGeneral {
     private final ControlSerializacion cSer = new ControlSerializacion();
     private final ControlRAF cRaf = new ControlRAF();
     private final ControlJuego cJuego = new ControlJuego();
-
     private final ControlVista cVista;
+    
+    /**
+     * Constructor de la clase.
+     * Inicializa la vista principal y carga los equipos previamente
+     * serializados (si existen). Si no hay registros, la lista de equipos
+     * comienza vacía.
+     */
 
     public ControlGeneral() {
         this.cVista = new ControlVista(this);
@@ -38,6 +43,11 @@ public class ControlGeneral {
         }
     }
 
+    /**
+     * Carga equipos desde un archivo .properties.
+     * Vista -> General -> Properties (crudo) -> Equipos (crear entidades) ->
+     * Vista
+     */
     
     public String cargarEquiposDesdeProperties(java.io.File f) {
         try {
@@ -53,8 +63,14 @@ public class ControlGeneral {
     }
 
     /**
-     * Vista -> General -> Equipos (buscar por nombre) -> Juego (iniciar con
-     * DATOS).
+     * Inicia una partida entre dos equipos seleccionados.
+     *
+     * Flujo de datos:
+     * Vista -> ControlGeneral -> ControlEquipos -> ControlJuego
+     *
+     * @param nombreA nombre del equipo A
+     * @param nombreB nombre del equipo B
+     * @return mensaje indicando el inicio de la partida o error
      */
     public String iniciarPartida(String nombreA, String nombreB) {
         Equipo a = cEquipos.buscarPorNombre(nombreA);
@@ -63,7 +79,13 @@ public class ControlGeneral {
     }
 
     /**
-     * Vista -> General -> Juego; si termina, General -> RAF.
+     * Ejecuta un lanzamiento en la partida actual.
+     *
+     * Flujo de datos:
+     * Vista -> ControlGeneral -> ControlJuego
+     * Si la partida termina, se guarda el resultado usando ControlRAF.
+     *
+     * @return objeto Lanzamiento con los datos del tiro
      */
     public ControlJuego.Lanzamiento siguienteLanzamiento() {
         var r = cJuego.siguienteLanzamiento();
@@ -76,13 +98,20 @@ public class ControlGeneral {
         }
         return r;
     }
-
+    /**
+     * Inicia una nueva ronda si la partida anterior ha finalizado.
+     *
+     * @return mensaje informativo sobre el estado de la nueva ronda
+     */
     public String nuevaRonda() {
         return cJuego.nuevaRonda();
     }
 
     /**
-     * Vista -> General -> Serialización (guardar equipos).
+     * Guarda el estado actual de los equipos mediante serialización.
+     *
+     * Flujo de datos:
+     * Vista -> ControlGeneral -> ControlSerializacion
      */
     public void guardarEstado() {
         try {
@@ -92,7 +121,12 @@ public class ControlGeneral {
     }
 
     /**
-     * Vista -> General -> RAF (lectura historial).
+     * Obtiene el historial de partidas almacenado en archivos de acceso aleatorio.
+     *
+     * Flujo de datos:
+     * Vista -> ControlGeneral -> ControlRAF
+     *
+     * @return lista de registros del historial o lista vacía si ocurre un error
      */
     public List<ArchivoAccesoAleatorio.Registro> obtenerHistorial() {
         try {
