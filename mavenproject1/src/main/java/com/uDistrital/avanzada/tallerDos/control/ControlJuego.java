@@ -23,6 +23,8 @@ public class ControlJuego {
      * Estado del partido (modelo puro).
      */
     private Juego juego;
+    private boolean finPartida;
+    private int contadorRondas = 1;
 
     /**
      * Inicia una partida con dos equipos 
@@ -91,7 +93,7 @@ public class ControlJuego {
 
             boolean finMano = (juego.getIdxJugador() == 4);
             boolean cambioEquipo = finMano;
-            boolean finPartida = false;
+            this.finPartida = false;
             Equipo ganador = null;
 
             if (finMano) {
@@ -331,5 +333,6 @@ public class ControlJuego {
         public boolean hayError() {
             return error != null;
         }
+        
     }
 }

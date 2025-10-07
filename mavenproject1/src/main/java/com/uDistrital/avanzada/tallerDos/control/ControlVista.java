@@ -92,6 +92,10 @@ public class ControlVista implements ActionListener {
         String a = (String) vista.cbEquipoA.getSelectedItem();
         String b = (String) vista.cbEquipoB.getSelectedItem();
         String msg = controlGeneral.iniciarPartida(a, b);
+        if (msg.startsWith("Seleccione")) {
+            vista.mostrarDialogo("Advertencia", msg);
+            return; // No continúa si hay error
+        }
         if (msg.startsWith("Ronda")) {
             vista.showJuego();
         }
