@@ -65,7 +65,8 @@ class ControlJuegoTest {
         assertTrue(lanzamiento.error.contains("Inicie la partida primero"));
     }
     /**
-     * Prueba un lanzamiento de una partida en curso devuelve datos correctos
+     * Prueba un lanzamiento de una partida en curso devuelve datos correctos 
+     * 
      */
     @Test
     void testSiguienteLanzamientoConPartidaIniciada() {
