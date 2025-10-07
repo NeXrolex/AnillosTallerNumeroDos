@@ -12,7 +12,9 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- *
+ *Clase encargada de controlar la logica principal del juego 
+ *Maneja  el inicio de partidas, lanzamientos, cambios de turno,
+ *rondas, muerte subita y determinacion de ganadores
  * @author Alex
  */
 public class ControlJuego {
@@ -23,9 +25,10 @@ public class ControlJuego {
     private Juego juego;
 
     /**
-     * Inicia una partida con dos equipos (solo datos).
-     *
-     * @return texto informativo para la vista
+     * Inicia una partida con dos equipos 
+     * @param equipoA Primer equipo
+     * @param equipoB Segundo equipo
+     * @return Texto informando sobre el exito de la partida
      */
     public String iniciar(Equipo equipoA, Equipo equipoB) {
         if (equipoA == null || equipoB == null || equipoA == equipoB) {
@@ -44,25 +47,32 @@ public class ControlJuego {
     }
 
     /**
-     * Ejecuta UN lanzamiento (para animación lenta en la Vista).
-     *
-     * @return DTO con datos para mostrar (o error)
+     * Encargado de hacer un lanzamiento individual, tambien gestiona el flujo
+     * del juego turnos, cambios de equipo,finalización de manos, evaluación de
+     * ganadores y muerte súbita.
+     * @return Lanzamiento con todos los datos correspondientes o error si no es
      */
     public Lanzamiento siguienteLanzamiento() {
-        if (juego == null || juego.getEquipoA() == null || juego.getEquipoB() == null) {
+        if (juego == null || juego.getEquipoA() == null
+                || juego.getEquipoB() == null) {
             return Lanzamiento.error("Inicie la partida primero\n");
         }
 
         // Equipo en turno
-        Equipo eq = juego.isTurnoEquipoA() ? juego.getEquipoA() : juego.getEquipoB();
+        Equipo eq = juego.isTurnoEquipoA() ? juego.getEquipoA()
+                : juego.getEquipoB();
 
-        // Validación: si ya tiraron los 4 y no hay muerte súbita, no se puede lanzar
+        // Validación: si ya tiraron los 4 y no hay muerte súbita
+        //, no se puede lanzar
         if (juego.getIdxJugador() >= 4 && !juego.isEnMuerteSubita()) {
-            return Lanzamiento.error("Mano ya completada, presione 'Otra ronda' o espere cambio de equipo\n");
+            return Lanzamiento.error("Mano ya completada,"
+                    + " presione 'Otra ronda' o espere cambio de equipo\n");
         }
 
-        // Selección de jugador (en muerte súbita usamos posición 0 como simplificación de parejas)
-        Jugador jugador = jugadores(eq).get(juego.isEnMuerteSubita() ? 0 : juego.getIdxJugador());
+        // Selección de jugador (en muerte súbita usamos posición 0 como 
+        //simplificación de parejas)
+        Jugador jugador = jugadores(eq).get(juego.isEnMuerteSubita() ? 0
+                : juego.getIdxJugador());
 
         // Puntuación aleatoria según las probabilidades del taller
         int pts = puntajeAleatorio();
@@ -101,7 +111,8 @@ public class ControlJuego {
                         } else {
                             // Hay ganador por superar la meta
                             finPartida = true;
-                            ganador = (juego.getPuntosA() > juego.getPuntosB()) ? juego.getEquipoA() : juego.getEquipoB();
+                            ganador = (juego.getPuntosA() > juego.getPuntosB())
+                                    ? juego.getEquipoA() : juego.getEquipoB();
                         }
                     } else {
                         // Nadie llegó a la meta -> nueva ronda, arranca A
@@ -134,7 +145,8 @@ public class ControlJuego {
                 juego.setPuntosB(juego.getPuntosB() + pts);
                 Equipo ganador = (juego.getPuntosA() == juego.getPuntosB())
                         ? null
-                        : (juego.getPuntosA() > juego.getPuntosB() ? juego.getEquipoA() : juego.getEquipoB());
+                        : (juego.getPuntosA() > juego.getPuntosB()
+                        ? juego.getEquipoA() : juego.getEquipoB());
                 boolean fin = (ganador != null);
                 if (!fin) {
                     // Sigue MS
@@ -157,24 +169,33 @@ public class ControlJuego {
             }
         }
     }
-
-    
+    /**
+     * Se encarga de dar informacion de una nueva ronda
+     * y la ronda avanza automaticamente
+     * @return Mensaje informando sobre la ronda actual
+     */
     public String nuevaRonda() {
-        if (juego == null || juego.getEquipoA() == null || juego.getEquipoB() == null) {
+        if (juego == null || juego.getEquipoA() == null
+                || juego.getEquipoB() == null) {
             return "Inicie la partida primero\n";
         }
         // Mensaje más claro: la ronda avanza cuando B termina su mano
-        return "Si ya jugaron A y B, la siguiente ronda se activará al finalizar la mano actual. Juega: "
+        return "Si ya jugaron A y B, la siguiente ronda se activará al "
+                + "finalizar la mano actual. Juega: "
                 + (juego.isTurnoEquipoA() ? "Equipo A\n" : "Equipo B\n");
     }
 
-    // ======== Utilidades privadas (lógica, no-UI) ========
+    /**
+     * Obtiene la lista de jugadores de un equipo
+     * @param e Equipo obtenido
+     * @return Lista de jugadores del equipoq
+     */
     private List<Jugador> jugadores(Equipo e) {
         return e.getJugadores();
     }
-
     /**
-     * Probabilidades aproximadas del taller.
+     * Se encarga de generar un puntaje aleaorio 
+     * @return puntaje entre 1 y 8
      */
     private int puntajeAleatorio() {
         int r = ThreadLocalRandom.current().nextInt(100);
@@ -197,8 +218,11 @@ public class ControlJuego {
     }
 
     /**
-     * Traduce puntaje a nombre usando los valores almacenados en el modelo
-     * (POJO).
+     * Convierte en puntaje numerico a la jugada usando los valores 
+     * correspondientes
+     * @param pts Puntaje obtenido
+     * @param j Instacia el juego con los valores predeterminados
+     * @return Nombre de la jugada Correspondiente al puntaje
      */
     private String nombreJugada(int pts, Juego j) {
         if (pts == j.getPuntajeMonona()) {
@@ -219,9 +243,13 @@ public class ControlJuego {
         return "Otro";
     }
 
-    // ======== DTO para la Vista ========
+    /**
+     * Encapsula toda la información de un lanzamiento
+     * para ser utilizada por la vista. Contiene datos del jugador, puntajes,
+     * estado del juego y posibles transiciones.
+     */
     public static class Lanzamiento {
-
+        
         public final Equipo equipo;
         public final Jugador jugador;
         public final int puntosLanzamiento;
@@ -233,10 +261,26 @@ public class ControlJuego {
         public final int ronda;
         public final String meta;
         public final String error;
-
-        public Lanzamiento(Equipo eq, Jugador j, int pts, String jugada, int totA, int totB,
-                boolean finMano, boolean cambioEquipo, boolean finPartida, Equipo ganador,
-                boolean muerteSubita, int ronda, String meta) {
+        /**
+         * Constructor para un lanzamiento exitoso
+         * @param eq Equipo que lanzó
+         * @param j Jugador que lanzó
+         * @param pts Puntos del lanzamiento
+         * @param jugada Nombre de la jugada
+         * @param totA Puntaje total equipo A
+         * @param totB Puntaje total equipo B
+         * @param finMano Si terminó la mano
+         * @param cambioEquipo Si debe cambiar el turno
+         * @param finPartida Si terminó la partida
+         * @param ganador Equipo ganador
+         * @param muerteSubita Si está en muerte súbita
+         * @param ronda Ronda actual
+         * @param meta Información adicional
+         */
+        public Lanzamiento(Equipo eq, Jugador j, int pts, String jugada,
+                int totA, int totB, boolean finMano, boolean cambioEquipo,
+                boolean finPartida, Equipo ganador, boolean muerteSubita,
+                int ronda, String meta) {
             this.equipo = eq;
             this.jugador = j;
             this.puntosLanzamiento = pts;
@@ -252,7 +296,10 @@ public class ControlJuego {
             this.meta = meta;
             this.error = null;
         }
-
+        /**
+         * Constructor para crear un lanzamiento con error
+         * @param error Mensaje de error
+         */
         private Lanzamiento(String error) {
             this.equipo = null;
             this.jugador = null;
@@ -269,11 +316,18 @@ public class ControlJuego {
             this.meta = null;
             this.error = error;
         }
-
+        /**
+         * Crea un lanzamiento con error
+         * @param m mensaje de error
+         * @return Instancia un lanzamiento con error
+         */
         public static Lanzamiento error(String m) {
             return new Lanzamiento(m);
         }
-
+        /**
+         * Verifica si hay error
+         * @return true si hay error, false si no lo hay
+         */
         public boolean hayError() {
             return error != null;
         }
