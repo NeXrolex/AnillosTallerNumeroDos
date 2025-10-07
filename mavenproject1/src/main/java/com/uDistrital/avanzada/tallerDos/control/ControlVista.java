@@ -176,8 +176,11 @@ public class ControlVista implements ActionListener {
      */
     private void onSalir() {
         controlGeneral.guardarEstado();
+        List<ArchivoAccesoAleatorio.Registro> registros = controlGeneral.
+                obtenerHistorial();
         onVerHistorial();
-        vista.cerrarAplicacion();
+        
+        vista.cerrarAplicacion(registros);
     }
 
     /**
@@ -187,10 +190,10 @@ public class ControlVista implements ActionListener {
      *
      * @param equipos Lista de nombres de equipos disponibles
      */
-
     public void actualizarEquiposEnVista(List equipos) {
         vista.setEquipos(equipos);
     }
+
     /**
      * Invoca la interfaz grafica
      */
@@ -200,7 +203,7 @@ public class ControlVista implements ActionListener {
             vista.setVisible(true);
         });
     }
-    
+
     /**
      * Regresa a la pantalla de configuracion inicial
      */

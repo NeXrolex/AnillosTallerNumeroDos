@@ -113,7 +113,7 @@ public class ControlGeneral {
      * Recupera el acceso de las partidas almacenadas en el archivo
      * @return Lista de registro del historial
      */
-    public List<ArchivoAccesoAleatorio.Registro> obtenerHistorial() {
+public List<ArchivoAccesoAleatorio.Registro> obtenerHistorial() {
         try {
             return cRaf.leerHistorial();
         } catch (Exception e) {
